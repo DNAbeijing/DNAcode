@@ -1,6 +1,6 @@
 // getDist.cpp : 定义控制台应用程序的入口点。
 //
-
+#pragma warning(default:3852)
 #include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -841,7 +841,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	double R = 0.05;
 	string qn = "D:\\DNA\\ts\\D.txt";
 
-	fopen_s(&fp, "D:\\DNA\\ts\\D_output.txt", "w");
 	/*
 	int c;
 	do{
@@ -857,10 +856,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	fopen_s(&qpl, "D:\\DNA\\ts\\D_len.txt", "r");
 	char *buf;
 	char *buf2;
+	cout << "Query file number: " << size << endl;
+	cout << "Begin computation!" << endl;
+	
 	for (int i = startt; i < count+startt; i++)
-	{
-		cout << "Query file number: " << size << endl;
-		cout << "Begin computation!" << endl;
+	{		
+		fopen_s(&fp, "D:\\DNA\\ts\\D_output.txt", "a");
+
 		fseek(qpl, fileSeekPos, 0);
 		fseek(qp, fileSeekPos2, 0);
 		//char buf[20];
@@ -876,6 +878,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		//cout << M << endl;
 		for (int j = 0; j < size; j++)
 		{
+			//if (j % 500 == 0 && j > 0) {
+			//	fclose(fp);
+			//	fopen_s(&fp, "D:\\DNA\\ts\\D_output.txt", "a");
+			//}
 			//string dn = files[j];
 			//cout << dn.size() << endl;
 			//cout << "UCR前: " << dn.size() << ":" << qn.size() << ":" << i << ":" << M << ":" << R<< endl;
@@ -886,8 +892,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			//fprintf(fp, "%f\t", dis);
 			fprintf(fp, "%d\t%d\t%f\n", i, j, UCR(files[j], qn, i, M, R));
 			//cout << j << endl;
+			//cout << j << endl;
 		}
-		fprintf(fp, "\n");
 		//遍历完所有的data文件后，query_len文件的指针下移一行
 		fileSeekPos = fileSeekPos + strlen(buf) + 1;
 		//cout << fileSeekPos << endl;
@@ -903,10 +909,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		//cout << "The running time is: " << (double)(finish - start) / CLOCKS_PER_SEC / 60.0 << endl;
 		free(buf);
 		free(buf2);
+		fclose(fp);
+		
 	}
 	fclose(qpl);
 	fclose(qp);
-	fclose(fp);
+	
+
 
 	finish = clock();
 	cout << "The running time is: " << (double)(finish - start) / CLOCKS_PER_SEC / 60.0 << endl;
