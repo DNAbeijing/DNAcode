@@ -9,9 +9,13 @@ import urllib
 import re
 import scipy.stats as ss
 
+####
+thresh = 100
+####
+
 virusDic = {}
 
-fvirus = open('vnVSvnc.txt')
+fvirus = open('bnVSbnc.txt')
 for i in fvirus.readlines():
     fName = re.findall('\w*',i)[0]
     vName1 = re.findall('\w*',i)[7].split('_')[0]
@@ -40,13 +44,14 @@ for query in virusDic.keys():
         num = 0
     else:
         num = re.findall('\d*', numRaw[0])[3]
-    numList.append(int(num))
+    if num >= thresh:
+        numList.append(int(num))
     print query, num
     
 ind = list(ss.rankdata(numList,method='ordinal'))
 
-queryOrder = open('virusqueryOrder.txt', 'w')
-queryOrder1 = open('virusqueryOrder1.txt', 'w')
+queryOrder = open('bacteriaqueryOrder.txt', 'w')
+queryOrder1 = open('bacteriaqueryOrder1.txt', 'w')
 for i in reversed(range(len(queryList))):
     id = int(ind.index(i+1))
     for fileName in virusDic[queryList[id]]:

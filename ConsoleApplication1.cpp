@@ -13,6 +13,8 @@
 #include<io.h>
 #include<vector>
 #include <typeinfo>
+#include<fstream>
+#include<string>
 
 #define min(x,y) ((x)<(y)?(x):(y))
 #define max(x,y) ((x)>(y)?(x):(y))
@@ -797,62 +799,9 @@ void getFiles(string path, vector<string>& files)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	/*
-	FILE *qp;
-	int M = 0;
-	//R使用了指定的参数
-	double R = 0.05;
-	string qn = "Query.txt";
 
-	//待查询序列的个数
-	int queryNum = 2;
-	//!!!!!!!!!!!!!!!!每个待查询序列的大小，需要读取单独的文件 TODO
-	int querySize[queryNum] = { 14, 8 };
-
-	string Data_Folder = "Data";
-	DIR* Data_Folder_Point = opendir(Data_Folder.c_str());
-	struct dirent *Data_Name;
-	string DataList[4] = { "a", "b", "c", "d" };
-	int DataListLen = 0;
-
-	if ((Data_Folder_Point = opendir(Data_Folder.c_str())) == NULL)
-	cout << "Can't open " << Data_Folder_Point << endl;
-
-	while ((Data_Name = readdir(Data_Folder_Point)) != NULL){
-	string dn = Data_Name->d_name;
-	if (dn.size()>2){
-	DataList[DataListLen] = dn;
-	DataListLen += 1;
-	}
-	}
-
-	FILE *fp;
-	fp = fopen("output.txt", "w");
-
-	cout << "Query_Number" << '\t' << "Data_Number" << '\t' << "Distance";
-
-	for (int i = 0; i < queryNum; i++){
-	for (int j = 0; j < DataListLen; j++){
-	string dn = "Data\\" + DataList[j];
-	M = querySize[i];
-	float dis = UCR(dn, qn, i, M, R);
-	cout << i + 1 << '\t' << j + 1 << '\t' << dis;
-	fprintf(fp, "%f\t", dis);
-	}
-
-	qp = fopen(qn.c_str(), "r");
-	fseek(qp, fileSeekPos, 0);
-	//！！！buf的大小
-	char buf[10000];
-	fgets(buf, 10000, qp);
-	fileSeekPos = fileSeekPos + strlen(buf) + 1;
-	fclose(qp);
-
-	fprintf(fp, "\n");
-	}
-
-	closedir(Data_Folder_Point);
-	*/
+	//参数
+	
 	long start, finish;
 	double totaltime;
 	start = clock();
@@ -861,23 +810,28 @@ int _tmain(int argc, _TCHAR* argv[])
 	FILE *qp;
 	FILE *qpl;
 	FILE *virusName;
-
-	char * filePath = "D:\\DNA\\ts\\query";
-	//char * filePath = "D:\\study files\\Data Mining\\DNA\\Vir_fna_txt";
 	vector<string> files;
-	string pattern = "\\";
 
 	//获取该路径下的所有文件  
-	getFiles(filePath, files);
+	//char * filePath = "D:\\DNA\\ts\\querySample";
+	//getFiles(filePath, files);
 
-	//char str[30];
+	//读取待处理的病毒细菌的文件名
+	ifstream infile("D:\\DNA\\ts\\queryOrder.txt");
+	string fileBuf;
+	while (getline(infile, fileBuf))
+	{
+		fileBuf = "D:\\DNA\\ts\\query\\" + fileBuf;
+		files.push_back(fileBuf);
+		//cout << fileBuf << endl;
+	}
+
 	int size = files.size();
-	cout << size << endl;
 
-	//输出病毒细菌的文件名
-	fopen_s(&virusName, "D:\\DNA\\ts\\virusName.txt", "w");
+	//输出病毒细菌的文件名，获得矩阵的列顺序
+	fopen_s(&virusName, "D:\\DNA\\ts\\queryName.txt", "w");
 	for (int i = 0; i < size; i++) {
-		fprintf(virusName, "%s\n",files[i].c_str());
+		fprintf(virusName, "%s\n", files[i].c_str());
 	}
 	fclose(virusName);
 
@@ -885,9 +839,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	int count = 0; //query.txt中短序列的个数
 				   //R使用了指定的参数 
 	double R = 0.05;
-	string qn = "D:\\DNA\\ts\\C.txt";
+	string qn = "D:\\DNA\\ts\\D.txt";
 
-	fopen_s(&fp, "D:\\DNA\\ts\\C_output.txt", "w");
+	fopen_s(&fp, "D:\\DNA\\ts\\D_output.txt", "w");
 	/*
 	int c;
 	do{
@@ -897,14 +851,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	} while (c != EOF);
 	*/
 	//cout << count << endl;
-	count = 3844948;
-	count = 10000;
-	fopen_s(&qp, "D:\\DNA\\ts\\C.txt", "r");
-	fopen_s(&qpl, "D:\\DNA\\ts\\C_len.txt", "r");
+	int startt = 0;
+	count = 1000;
+	fopen_s(&qp, "D:\\DNA\\ts\\D.txt", "r");
+	fopen_s(&qpl, "D:\\DNA\\ts\\D_len.txt", "r");
 	char *buf;
 	char *buf2;
-	for (int i = 0; i < count; i++)
+	for (int i = startt; i < count+startt; i++)
 	{
+		cout << "Query file number: " << size << endl;
+		cout << "Begin computation!" << endl;
 		fseek(qpl, fileSeekPos, 0);
 		fseek(qp, fileSeekPos2, 0);
 		//char buf[20];
@@ -928,7 +884,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			//cout << dis << endl;
 			//cout << i + 1 << '\t' << j + 1 << '\t' << dis<<endl;
 			//fprintf(fp, "%f\t", dis);
-			fprintf(fp, "%f\t", UCR(files[j], qn, i, M, R));
+			fprintf(fp, "%d\t%d\t%f\n", i, j, UCR(files[j], qn, i, M, R));
 			//cout << j << endl;
 		}
 		fprintf(fp, "\n");
@@ -942,7 +898,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		fgets(buf2, 1000, qp);
 		fileSeekPos2 = fileSeekPos2 + strlen(buf2) + 1;
 		//cout << "fileSeekPos2：" << fileSeekPos2 << endl;
-		if (i % 1000 == 0 || i == count - 1) cout << "第" << i << "序列..." << endl;
+		if (i % 1 == 0 || i == count + startt - 1) cout << "第" << i << "序列..." << endl;
 		//finish = clock();
 		//cout << "The running time is: " << (double)(finish - start) / CLOCKS_PER_SEC / 60.0 << endl;
 		free(buf);
@@ -950,6 +906,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	fclose(qpl);
 	fclose(qp);
+	fclose(fp);
 
 	finish = clock();
 	cout << "The running time is: " << (double)(finish - start) / CLOCKS_PER_SEC / 60.0 << endl;

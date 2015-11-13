@@ -861,7 +861,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	FILE *qp;
 	FILE *qpl;
 
-	char * filePath = "D:\\study files\\Data Mining\\DNA\\RAW_DATA\\test\\data2";
+	char * filePath = "D:\\DNA\\ts\\query";
 	//char * filePath = "D:\\study files\\Data Mining\\DNA\\Vir_fna_txt";
 	vector<string> files;
 	string pattern = "\\";
@@ -877,9 +877,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	int count = 0; //query.txt中短序列的个数
 	//R使用了指定的参数 
 	double R = 0.05;
-	string qn = "D:\\study files\\Data Mining\\DNA\\RAW_DATA\\test\\C.txt";
+	string qn = "D:\\DNA\\ts\\C.txt";
 	
-	fopen_s(&fp, "D:\\study files\\Data Mining\\DNA\\RAW_DATA\\test\\C_output.txt", "w");
+	fopen_s(&fp, "D:\\DNA\\ts\\C_output.txt", "w");
 	/*
 	int c;
 	do{
@@ -890,9 +890,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	*/
 	//cout << count << endl;
 	count = 3844948;
-	//count = 3;
-	fopen_s(&qp, "D:\\study files\\Data Mining\\DNA\\RAW_DATA\\test\\C.txt", "r");
-	fopen_s(&qpl, "D:\\study files\\Data Mining\\DNA\\RAW_DATA\\test\\C_len.txt", "r");
+	count = 3;
+	fopen_s(&qp, "D:\\DNA\\ts\\C.txt", "r");
+	fopen_s(&qpl, "D:\\DNA\\ts\\C_len.txt", "r");
 	char *buf;
 	char *buf2;
 	for (int i = 0; i < count; i++)
